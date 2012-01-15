@@ -14,11 +14,11 @@ class MessQ
       while (session = webserver.accept)
         request = session.gets
         Thread.start(session, request) do |session, request|
-          if request.match(/enq\ /)
-            @q << request.gsub(/enq\ /, '').chomp
+          if request.match(/[eE][nN][qQ]\ /)
+            @q << request.gsub(/[eE][nN][qQ]\ /, '').chomp
             logme "added to messQ: #{@q[-1]}"
             session.print @q[-1]
-          elsif request.match(/deq/)
+          elsif request.match(/[dD][eE][qQ]/)
             deq = @q.shift
             logme "removed from messQ: #{deq}"
             session.print deq
