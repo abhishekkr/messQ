@@ -8,6 +8,15 @@
   ~=ABK=~ http://github.com/abhishekkr
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+  ### install
+  $ gem install messq
+
+  ### start messQ
+  $ messq
+
+  ### try enque/deque to messq
+  $ qssem
+
   a very simplistic socket-based message enQueue/deQueue facility
 
   |||||||||||||| HOW TO USE |||||||||||||||||

@@ -1,0 +1,74 @@
+#!/usr/bin/env ruby
+
+require 'socket'  
+
+class PlainQ
+  def initialize(qcmd, host="127.0.0.1", port=8888)
+    @host=host
+    @port=port
+
+    if qcmd.nil?
+      usage
+    elsif qcmd[0].match(/enq/)
+      enq qcmd[1..-1]
+    elsif qcmd[0].match(/deq/)
+      deq 
+    elsif qcmd[0].match(/demo/)
+      demo
+    end
+  end
+
+  def soketiz(qmesg=nil)
+    begin
+      sok = TCPSocket.new(@host, @port.to_i)
+      sok.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
+      sok.write qmesg
+      p "a1"
+      while (dat = sok.recv(1024))
+      p ">> #{dat}"
+        break if dat.nil?
+        sok_recvd.concat dat
+      end
+      p "a2"
+      sok.close
+      return sok_recvd
+    rescue
+      puts "Connection Problem:: Cannot hook to #{@port} at #{@host}."
+    end
+    return nil
+  end
+
+  def enq(mesg)
+    soketiz "enq #{mesg}"
+  end
+
+  def deq
+    soketiz "deq"
+  end
+
+  def usage
+    puts <<-USAGE
+       Wrong Syntax
+       How To Use ::
+        1# to enqueue any message to started MessQ
+              $plainq.rb enq any_message
+        2# to dequeue any message from started MessQ
+              $plainq.rb deq
+	3# to run a plain demo
+	      plainq.rb demo
+       USAGE
+  end
+
+  def demo
+    puts "You didn't passed any command, so its demo mode:\n"
+    return if enq("dummy").nil?
+    deq 
+  end
+end
+
+if ARGV.empty?
+  PlainQ.new(nil).demo
+  exit 0 
+end
+
+PlainQ.new ARGV
