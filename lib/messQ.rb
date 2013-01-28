@@ -1,13 +1,24 @@
+# messQ
+
+messq_libs = File.join(File.dirname(File.expand_path __FILE__), 'messQ', '*.rb')
+Dir.glob(messq_libs).each do |lib|
+    require lib
+end
+
 require 'socket'
 
-class MessQ
-  def initialize(host='0.0.0.0', port=8888)
-    @host = host
-    @port = port
-    @q = []
+module MessQ
+
+  class << self
+    attr_accessor :host
+    attr_accessor :port
+    attr_accessor :q
   end
 
-  def messQ_server
+  def self.messQ_server
+    @host ||= '0.0.0.0'
+    @port ||= 5566
+    @q    ||= []
     begin
       webserver = TCPServer.new(@host, @port)
       puts "messQ has been started at #{@host}:#{@port}"
@@ -31,9 +42,7 @@ class MessQ
     end
   end
 
-  def logme(message)
+  def self.logme(message)
     puts message
   end
 end
-
-MessQ.new('0.0.0.0', 8888).messQ_server
