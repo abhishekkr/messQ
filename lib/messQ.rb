@@ -10,39 +10,25 @@ require 'socket'
 module MessQ
 
   class << self
-    attr_accessor :host
-    attr_accessor :port
-    attr_accessor :q
+    attr_accessor :host, :port, :q
+    attr_accessor :pid, :pidfile, :logfile
   end
+  @host ||= '0.0.0.0'
+  @port ||= 5566
+  @q    ||= []
+  @pidfile = File.join(File.dirname(__FILE__), '..', 'bin', 'pidfile')
+  @logfile = File.join(File.dirname(__FILE__), '..', 'bin', 'messQ.log')
 
   def self.messQ_server
-    @host ||= '0.0.0.0'
-    @port ||= 5566
-    @q    ||= []
     begin
-      webserver = TCPServer.new(@host, @port)
-      puts "messQ has been started at #{@host}:#{@port}"
-      while (session = webserver.accept)
-        request = session.gets
-        Thread.start(session, request) do |session, request|
-          if request.match(/[eE][nN][qQ]\ /)
-            @q << request.gsub(/[eE][nN][qQ]\ /, '').chomp
-            logme "added to messQ: #{@q[-1]}"
-            session.print @q[-1]
-          elsif request.match(/[dD][eE][qQ]/)
-            deq = @q.shift
-            logme "removed from messQ: #{deq}"
-            session.print deq
-          end
-          session.close
-        end
+      Process.daemon(true)
+      @pid = Process.fork do
+        MessQ::Server.start
       end
+      File.open(@pidfile, 'w'){|fyl| fyl.puts @pid}
+      MessQ::Verbose.logme "MessQ server PID:#{@pid}"
     rescue
-      puts "messQ failed starting at #{@host}:#{@port}."
+      MessQ::Verbose.logme "messQ failed."
     end
-  end
-
-  def self.logme(message)
-    puts message
   end
 end
