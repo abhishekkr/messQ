@@ -1,6 +1,20 @@
 #!/usr/bin/env ruby
 $LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
 
+require 'arg0'
 require 'messQ'
 
-MessQ.messQ_server
+if Arg0::Console.switch?('--start')
+  MessQ.messQ_server
+  puts "MessQ server started."
+elsif Arg0::Console.switch?('--stop')
+  MessQ::Server.stop
+  puts "MessQ server stopped."
+elsif Arg0::Console.switch?(['--dequeue', '-deq'])
+  puts "Value dequeued: #{MessQ::Agent.dequeue}"
+end
+
+que = Arg0::Console.value_for(['--enqueue', '-enq'])
+que.each do |q|
+  MessQ::Agent.enqueue q
+end
