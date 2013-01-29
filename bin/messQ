@@ -4,6 +4,11 @@ $LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
 require 'arg0'
 require 'messQ'
 
+que = Arg0::Console.value_for(['--enqueue', '-enq'])
+que.each do |q|
+  MessQ::Agent.enqueue q
+end
+
 if Arg0::Console.switch?('--start')
   MessQ.messQ_server
   puts "MessQ server started."
@@ -12,9 +17,29 @@ elsif Arg0::Console.switch?('--stop')
   puts "MessQ server stopped."
 elsif Arg0::Console.switch?(['--dequeue', '-deq'])
   puts "Value dequeued: #{MessQ::Agent.dequeue}"
-end
-
-que = Arg0::Console.value_for(['--enqueue', '-enq'])
-que.each do |q|
-  MessQ::Agent.enqueue q
+elsif Arg0::Console.switch?(['-h', '--help']) || que.empty?
+  puts <<-HELP
+  MessQ v0.0.1
+  a very simplistic queue server and agent
+  MessQ can be started in daemon mode as
+    $ messQ --start
+  Can be stopped in following way
+    $ messQ --stop
+  Enqueue & Dequeue at Console happens like
+    $ messQ -enq <element>
+    $ messQ --enqueue <element>
+    $ messQ -deq
+    $ messQ --dequeue
+  Enqueue & Dequeue from Ruby Code requires
+    requie 'messQ'
+    # if required configure
+    MessQ.host = <host IP>
+    MessQ.port = <port for MessQ Server>
+    # mandatory
+    MessQ::Agent.enqueue(<element>) # returns enqueued <element>
+    MessQ::Agent.dequeue            # returns dequeued element
+  This message comes on
+    $ messq -h
+    $ messq --help
+  HELP
 end
