@@ -39,7 +39,7 @@ elsif Arg0::Console.switch?(['-h', '--help']) || que.empty?
     MessQ::Agent.enqueue(<element>) # returns enqueued <element>
     MessQ::Agent.dequeue            # returns dequeued element
   This message comes on
-    $ messq -h
-    $ messq --help
+    $ messQ -h
+    $ messQ --help
   HELP
 end

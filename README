@@ -12,10 +12,10 @@
 
   |||||||||||||| HOW TO USE |||||||||||||||||
 
-  messq --start
-  messq --stop
-  messq -enq element || messq --enqueue element || MessQ::Agent.enqueue(elelemnt)
-  messq -deq || messq --dequeue || MessQ::Agent.dequeue
+  messQ --start
+  messQ --stop
+  messQ -enq element || messq --enqueue element || MessQ::Agent.enqueue(elelemnt)
+  messQ -deq || messq --dequeue || MessQ::Agent.dequeue
 
   [] To enqueue a message
     open a connection to it (default at port 8888)
