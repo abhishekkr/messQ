@@ -8,9 +8,9 @@ Gem::Specification.new do |gem|
   gem.version       = MessQ::VERSION
   gem.authors       = ["AbhishekKr"]
   gem.email         = ["abhikumar163@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = %q{a very simplistic queue server and agent}
+  gem.summary       = %q{a very simplistic socket-based message enQueue/deQueue facility}
+  gem.homepage      = "https://github.com/abhishekkr/messQ"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
