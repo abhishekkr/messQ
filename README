@@ -18,12 +18,12 @@
   messQ -deq || messq --dequeue || MessQ::Agent.dequeue
 
   [] To enqueue a message
-    open a connection to it (default at port 8888)
+    open a connection to it (default at port 5566)
     and send as 'enq MESSAGE'
     it will return the enqueued message, if wanna check back
 
   [] To dequeue a message
-    open a connection to it (default at port 8888)
+    open a connection to it (default at port 5566)
     and send as 'deq'
     it will return the dequeued message
 
